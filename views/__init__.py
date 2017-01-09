@@ -12,6 +12,10 @@ from exceptions.json import *
 
 class BaseHandler(RequestHandler):
 
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
     def prepare(self):
         db.connect()
         return super(BaseHandler, self).prepare()
@@ -26,8 +30,6 @@ class BaseHandler(RequestHandler):
         resp_json = json_encode({'errcode': errcode,
                     'errmsg': errmsg,
                                  'result': result})
-        if self.is_jsonp:
-            resp_json = "{}({})".format(self.callback_fun_name, resp_json)
         self.finish(resp_json)
 
     def _handle_request_exception(self, e):
@@ -45,4 +47,3 @@ class BaseHandler(RequestHandler):
             print(traceback.format_exc())
             if raise_error:
                 raise JsonDecodeError()
-
