@@ -24,3 +24,26 @@ class PostHandler(BaseHandler):
         self.finish_json(result={
             'post': post.to_dict()
             })
+
+    def get(self):
+        posts = Post.select()
+        posts_dict = [post.to_dict() for post in posts]
+        self.fill_users(posts_dict)
+        self.finish_json(result={
+            'list': posts_dict
+            })
+
+    def fill_users(self, posts):
+        user_ids = []
+        for post in posts:
+            print(post)
+            if post['author_id'] not in user_ids:
+                user_ids.append(post['author_id'])
+            if post['target_id'] not in user_ids:
+                user_ids.append(post['target_id'])
+        users = User.select().where(User.id << user_ids)
+        for post in posts:
+            post['target'] = next(user for user in users if user.id == post['target_id']).to_dict()
+            post['author'] = next(user for user in users if user.id == post['author_id']).to_dict()
+
+

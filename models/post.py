@@ -21,7 +21,3 @@ class Post(BaseModel):
     target_id = IntegerField()
     content = CharField()
     photos = CharArrayField()
-
-    class Meta:
-        database = db
-

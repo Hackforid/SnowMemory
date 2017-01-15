@@ -35,7 +35,7 @@ class BaseHandler(RequestHandler):
     def _handle_request_exception(self, e):
         db.rollback()
         if isinstance(e, JsonException):
-            print(e.tojson())
+            print(e.to_json())
             self.finish_json(errcode=e.errcode, errmsg=e.errmsg)
         else:
             super(BaseHandler, self)._handle_request_exception(e)

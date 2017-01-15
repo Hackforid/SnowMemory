@@ -10,6 +10,3 @@ class User(BaseModel):
     password = CharField()
     nickname = CharField()
     enable = IntegerField()
-
-    class Meta:
-        database = db
