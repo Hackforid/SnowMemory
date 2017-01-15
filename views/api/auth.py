@@ -8,7 +8,7 @@ from models.user import User
 from models.auth import Auth
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
-from kit.user import password_hash
+from kit.auth import password_hash
 
 class AuthHandler(BaseHandler):
 

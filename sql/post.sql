@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : rmbp
- Source Server Type    : MariaDB
+ Source Server         : maclocal
+ Source Server Type    : MySQL
  Source Server Version : 100120
  Source Host           : localhost
  Source Database       : snowmemory
 
- Target Server Type    : MariaDB
+ Target Server Type    : MySQL
  Target Server Version : 100120
  File Encoding         : utf-8
 
- Date: 01/10/2017 20:39:03 PM
+ Date: 01/16/2017 00:21:57 AM
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,6 @@ CREATE TABLE `post` (
   PRIMARY KEY (`id`),
   KEY `author_id` (`author_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

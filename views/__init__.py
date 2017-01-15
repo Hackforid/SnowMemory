@@ -7,6 +7,8 @@ from models import db
 from tornado.escape import json_encode, json_decode
 from tornado.util import ObjectDict
 from exceptions.json import *
+from models.auth import Auth
+from models.user import User
 
 
 
@@ -47,3 +49,19 @@ class BaseHandler(RequestHandler):
             print(traceback.format_exc())
             if raise_error:
                 raise JsonDecodeError()
+
+    def get_current_user(self):
+        username = self.request.headers.get('username', None)
+        access_token = self.request.headers.get('access_token', None)
+        if username is None or access_token is None:
+            return None
+        user = User.single(User.username == username)
+        if user is None:
+            return None
+        auth = Auth.single(Auth.source_id == 0 and Auth.user_id == user.id)
+        if auth.access_token == access_token:
+            return user
+        else:
+            return None
+
+

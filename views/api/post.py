@@ -5,9 +5,11 @@ from models.user import User
 from models.post import Post
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
+from kit.auth import auth_login
 
 class PostHandler(BaseHandler):
 
+    @auth_login
     def post(self):
         args = self.get_json_arguments()
 
@@ -25,6 +27,7 @@ class PostHandler(BaseHandler):
             'post': post.to_dict()
             })
 
+    @auth_login
     def get(self):
         posts = Post.select()
         posts_dict = [post.to_dict() for post in posts]
