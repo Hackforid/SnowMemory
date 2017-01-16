@@ -13,13 +13,16 @@ class PostHandler(BaseHandler):
     def post(self):
         args = self.get_json_arguments()
 
-        author_id = args['author_id']
-        target_id = args['target_id']
+        target_name = args['target_name']
         photos = args['photos']
         content = args['content']
 
-        post = Post(author_id = author_id,
-                target_id = target_id,
+        target_user = User.single(User.username == target_name)
+        if target_user is None:
+            raise JsonException(errcode=1000, errmsg="target not exist")
+
+        post = Post(author_id = self.current_user.id,
+                target_id = target_user.id,
                 photos = photos,
                 content = content)
         post.save()
@@ -46,7 +49,14 @@ class PostHandler(BaseHandler):
                 user_ids.append(post['target_id'])
         users = User.select().where(User.id << user_ids)
         for post in posts:
-            post['target'] = next(user for user in users if user.id == post['target_id']).to_dict()
-            post['author'] = next(user for user in users if user.id == post['author_id']).to_dict()
+            try:
+                post['target'] = next(user for user in users if user.id == post['target_id']).to_dict()
+            except:
+                pass
+
+            try:
+                post['author'] = next(user for user in users if user.id == post['author_id']).to_dict()
+            except:
+                pass
 
 
