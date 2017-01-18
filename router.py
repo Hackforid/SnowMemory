@@ -4,6 +4,7 @@ from views.api.user import UserHandler, UsersHandler
 from views.api.store import UploadHandler
 from views.api.post import  PostHandler
 from views.api.auth import RegisterHandler, AuthHandler
+from views.api.comment import CommentHandler
 
 handlers = [
     (r"/api/user/(?P<id>\d+)/?", UserHandler),
@@ -13,4 +14,5 @@ handlers = [
     (r"/api/post/?", PostHandler),
     (r"/api/register/?", RegisterHandler),
     (r"/api/auth/?", AuthHandler),
+    (r"/api/post/(?P<post_id>\d+)/comment/?", CommentHandler),
         ]

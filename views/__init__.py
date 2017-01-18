@@ -4,7 +4,7 @@ import traceback
 
 from tornado.web import RequestHandler
 from models import db
-from tornado.escape import json_encode, json_decode
+from utils.json import json_encode, json_decode
 from tornado.util import ObjectDict
 from exceptions.json import *
 from models.auth import Auth
@@ -14,7 +14,7 @@ from models.user import User
 
 class BaseHandler(RequestHandler):
 
-    def options(self):
+    def options(self, *args, **kwargs):
         self.set_status(204)
         self.finish()
 
@@ -52,6 +52,7 @@ class BaseHandler(RequestHandler):
 
     def get_current_user(self):
         username = self.request.headers.get('username', None)
+        print(username)
         access_token = self.request.headers.get('access_token', None)
         if username is None or access_token is None:
             return None

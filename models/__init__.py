@@ -3,7 +3,7 @@
 import peewee
 from playhouse.pool import PooledMySQLDatabase
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from tornado.escape import json_encode, json_decode
+from utils.json import json_encode, json_decode
 
 db = PooledMySQLDatabase('snowmemory', user="root",
         max_connections=8, stale_timeout=300,)

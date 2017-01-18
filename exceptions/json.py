@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from tornado.escape import json_encode
+from utils.json import json_encode
 
 class JsonException(Exception):
     '''

@@ -57,10 +57,9 @@ class RegisterHandler(BaseHandler):
         if len(user) > 0:
             raise JsonException(10001, 'username exist')
 
-        nickname = args.get('nickname', username)
         hashed_password = password_hash(password)
 
-        user = User(username = username, password = hashed_password, nickname = nickname)
+        user = User(username = username, password = hashed_password)
         user.save()
         access_token = get_auth()
         auth = Auth(source_id=0, user_id=user.id, access_token=access_token)

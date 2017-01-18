@@ -11,7 +11,6 @@ class UserHandler(BaseHandler):
     @auth_login
     def get(self, id):
         user = User.get(User.id == id)
-        print(user.to_dict())
         self.write(user.to_dict())
 
     def post(self):
@@ -29,8 +28,6 @@ class UserHandler(BaseHandler):
             user.username = user_dict['username']
         if 'password' in user_dict:
             user.password = user_dict['password']
-        if 'nickname' in user_dict:
-            user.nickname = user_dict['nickname']
 
         user.save()
         self.write(user.to_dict())
