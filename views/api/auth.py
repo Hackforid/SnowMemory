@@ -9,6 +9,9 @@ from models.auth import Auth
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
 from kit.auth import password_hash
+from kit.redis import db
+import utils.strings as strings
+
 
 class AuthHandler(BaseHandler):
 
@@ -29,7 +32,8 @@ class AuthHandler(BaseHandler):
         if user is None or user.password != pwd:
             raise JsonException(1001, 'wrong password')
         access_token = get_auth()
-        auth = Auth.single(Auth.source_id == source and Auth.user_id == user.id)
+        auth = Auth.single(
+            Auth.source_id == source and Auth.user_id == user.id)
         if auth is None:
             auth = Auth(source_id=source, user_id=user.id)
         auth.access_token = access_token
@@ -39,8 +43,7 @@ class AuthHandler(BaseHandler):
             'username': user.username,
             'id': user.id,
             'access_token': access_token
-            })
-
+        })
 
 
 class RegisterHandler(BaseHandler):
@@ -52,14 +55,13 @@ class RegisterHandler(BaseHandler):
         if not username or not password:
             raise JsonException(1000, 'need username and password')
 
-
         user = User.select().where(User.username == username).limit(1)
         if len(user) > 0:
             raise JsonException(10001, 'username exist')
 
         hashed_password = password_hash(password)
 
-        user = User(username = username, password = hashed_password)
+        user = User(username=username, password=hashed_password)
         user.save()
         access_token = get_auth()
         auth = Auth(source_id=0, user_id=user.id, access_token=access_token)
@@ -68,11 +70,18 @@ class RegisterHandler(BaseHandler):
             'username': user.username,
             'id': user.id,
             'access_token': access_token
-            })
+        })
 
+    async def get(self):
+        email = self.get_argument('email')
+        password = strings.gen_password(6)
+        await db().set('email_key_' + email, password)
+        self.finish_json(result={
+            "email": email,
+            "password": password
+        })
 
 
 def get_auth():
     access_token = password_hash(str(datetime.datetime.now()))
     return access_token
-
