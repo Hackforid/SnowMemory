@@ -14,6 +14,9 @@ from models.user import User
 
 class BaseHandler(RequestHandler):
 
+    def initialize(self):
+        self._json_arguments = None
+
     def options(self, *args, **kwargs):
         self.set_status(204)
         self.finish()
@@ -43,12 +46,28 @@ class BaseHandler(RequestHandler):
             super(BaseHandler, self)._handle_request_exception(e)
 
     def get_json_arguments(self, raise_error=True):
-        try:
-            return ObjectDict(json_decode(self.request.body))
-        except Exception as e:
-            print(traceback.format_exc())
-            if raise_error:
-                raise JsonDecodeError()
+        if self._json_arguments is None:
+            try:
+                self._json_arguments = ObjectDict(json_decode(self.request.body))
+            except Exception as e:
+                print(traceback.format_exc())
+                if raise_error:
+                    raise JsonDecodeError()
+                else:
+                    self._json_arguments = {}
+        return self._json_arguments
+
+    def get_json_argument(self, key, default=None, valid=True):
+        if default is not None:
+            valid = False
+        args = self.get_json_arguments(valid)
+        value = args.get(key)
+        if value is None:
+            if valid:
+                raise JsonException(errcode=2000, errmsg=f"Need json argument {key}")
+            else:
+                value = default
+        return value
 
     def get_current_user(self):
         username = self.request.headers.get('username', None)
