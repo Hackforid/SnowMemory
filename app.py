@@ -34,23 +34,16 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, **setting)
 
-    def init_with_loop(self, loop):
-        self.loop = loop
-        from kit import redis
-        redis.init(loop)
-
 
 def main():
     tornado.options.parse_command_line()
     # http_server = tornado.httpserver.HTTPServer(Application())
     # http_server.listen(options.port, address="127.0.0.1")
     #tornado.ioloop.IOLoop.instance().start()
-
     AsyncIOMainLoop().install()
     loop = asyncio.get_event_loop()
     app = Application()
     app.listen(options.port)
-    app.init_with_loop(loop)
     loop.run_forever()
 
 

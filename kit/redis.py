@@ -3,12 +3,6 @@
 import asyncio
 import aioredis
 
-redis = None
+loop = asyncio.get_event_loop()
 
-def init(loop):
-    global redis
-    redis = loop.run_until_complete(aioredis.create_redis(
-        ('localhost', 6379), loop=loop))
-
-def db():
-    return redis
+redis = loop.run_until_complete(aioredis.create_redis(('localhost', 6379), loop=loop))

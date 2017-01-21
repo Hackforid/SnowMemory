@@ -9,7 +9,7 @@ from models.auth import Auth
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
 from kit.auth import password_hash
-from kit.redis import db
+from kit.redis import redis
 import utils.strings as strings
 
 
@@ -73,9 +73,10 @@ class RegisterHandler(BaseHandler):
         })
 
     async def get(self):
+        print(redis)
         email = self.get_argument('email')
         password = strings.gen_password(6)
-        await db().set('email_key_' + email, password)
+        await redis.set('email_key_' + email, password)
         self.finish_json(result={
             "email": email,
             "password": password
