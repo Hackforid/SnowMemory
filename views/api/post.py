@@ -14,26 +14,27 @@ class PostHandler(BaseHandler):
     def post(self):
         args = self.get_json_arguments()
 
-        target_name = args['target_name']
-        photos = args['photos']
-        content = args['content']
+        target_name = self.get_json_argument('target_name')
+        photos = self.get_json_argument('photos')
+        content = self.get_json_argument('content', '')
 
         target_user = User.single(User.username == target_name)
         if target_user is None:
             raise JsonException(errcode=1000, errmsg="target not exist")
 
         post = Post(author_id = self.current_user.id,
-                target_id = target_user.id,
-                photos = photos,
+                target_id = target_user.id, photos = photos,
                 content = content)
         post.save()
+        post_dict = post.to_dict()
+        self.fill_users([post_dict])
         self.finish_json(result={
-            'post': post.to_dict()
+            'post': post_dict
             })
 
     @auth_login
     def get(self):
-        posts = Post.select()
+        posts = Post.select().order_by(-Post.created_at)
         posts_dict = [post.to_dict() for post in posts]
         self.fill_comments(posts_dict)
         self.fill_users(posts_dict)

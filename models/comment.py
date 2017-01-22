@@ -9,4 +9,4 @@ class Comment(BaseModel):
     author_id = IntegerField()
     post_id = IntegerField()
     content = CharField()
-    created_at = TimestampField()
+    created_at = DateTimeField()

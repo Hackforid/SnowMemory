@@ -21,3 +21,4 @@ class Post(BaseModel):
     target_id = IntegerField()
     content = CharField()
     photos = CharArrayField()
+    created_at = DateTimeField()

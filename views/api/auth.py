@@ -41,8 +41,7 @@ class AuthHandler(BaseHandler):
         auth.save()
 
         self.finish_json(result={
-            'username': user.username,
-            'id': user.id,
+            'user': user.to_dict(),
             'access_token': access_token
         })
 
