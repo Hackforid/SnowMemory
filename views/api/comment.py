@@ -14,14 +14,15 @@ class CommentHandler(BaseHandler):
     def post(self, post_id):
         args = self.get_json_arguments()
         content = args['content']
-        
         comment = Comment(post_id = post_id,
                 author_id = self.current_user.id,
                 content = content
                 )
         comment.save()
+        comment_dict = comment.to_dict()
+        comment_dict['author'] = self.current_user.to_dict()
         self.finish_json(result={
-            "comment": comment.to_dict()
+            "comment": comment_dict
             })
 
 

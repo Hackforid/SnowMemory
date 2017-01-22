@@ -49,7 +49,7 @@ class PostHandler(BaseHandler):
                 user_ids.append(post['author_id'])
             if post['target_id'] not in user_ids:
                 user_ids.append(post['target_id'])
-            for comment in post['comments']:
+            for comment in post.get('comments', []):
                 if comment['author_id'] not in user_ids:
                     user_ids.append(comment['author_id'])
 
@@ -58,7 +58,7 @@ class PostHandler(BaseHandler):
         for post in posts:
             post['target'] = self.get_user_by_id(users, post['target_id'])
             post['author'] = self.get_user_by_id(users, post['author_id'])
-            for comment in post['comments']:
+            for comment in post.get('comments', []):
                 comment['author'] = self.get_user_by_id(users, comment['author_id'])
 
 
