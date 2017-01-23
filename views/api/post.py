@@ -34,12 +34,17 @@ class PostHandler(BaseHandler):
 
     @auth_login
     def get(self):
-        posts = Post.select().order_by(-Post.created_at)
+        start_id = int(self.get_argument('start_id', -1))
+        limit = int(self.get_argument('limit', 20))
+        if start_id != -1:
+            posts = Post.select().where(Post.id < start_id).order_by(-Post.created_at).limit(limit)
+        else:
+            posts = Post.select().order_by(-Post.created_at).limit(limit)
         posts_dict = [post.to_dict() for post in posts]
         self.fill_comments(posts_dict)
         self.fill_users(posts_dict)
         self.finish_json(result={
-            'list': posts_dict
+            'posts': posts_dict
             })
 
     def fill_users(self, posts):
