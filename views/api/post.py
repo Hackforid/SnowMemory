@@ -28,6 +28,7 @@ class PostHandler(BaseHandler):
         post.save()
         post_dict = post.to_dict()
         self.fill_users([post_dict])
+        post_dict['comments'] = []
         self.finish_json(result={
             'post': post_dict
             })
