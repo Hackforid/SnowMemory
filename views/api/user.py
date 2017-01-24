@@ -6,6 +6,7 @@ from models.post import Post
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
 from kit.auth import auth_login
+from kit.post import fill_user_and_comment_to_post
 
 class UserHandler(BaseHandler):
 
@@ -59,8 +60,11 @@ class UserInfoHandler(BaseHandler):
         if user is None:
             raise JsonException(errcode=1001, errmsg="")
         posts = Post.select(Post.target_id == user.id)
+        posts_dict = [post.to_dict() for post in posts]
+        fill_user_and_comment_to_post(posts_dict)
+
 
         self.finish_json(result={
             "user": user.to_dict(),
-            "posts": [post.to_dict() for post in posts]
+            "posts": posts_dict
             })

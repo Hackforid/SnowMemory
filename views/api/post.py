@@ -7,6 +7,7 @@ from models.comment import Comment
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
 from kit.auth import auth_login
+from kit.post import fill_user_and_comment_to_post
 
 class PostHandler(BaseHandler):
 
@@ -27,8 +28,8 @@ class PostHandler(BaseHandler):
                 content = content)
         post.save()
         post_dict = post.to_dict()
-        self.fill_users([post_dict])
         post_dict['comments'] = []
+        fill_user_and_comment_to_post([post_dict])
         self.finish_json(result={
             'post': post_dict
             })
@@ -42,41 +43,9 @@ class PostHandler(BaseHandler):
         else:
             posts = Post.select().order_by(-Post.created_at).limit(limit)
         posts_dict = [post.to_dict() for post in posts]
-        self.fill_comments(posts_dict)
-        self.fill_users(posts_dict)
+        fill_user_and_comment_to_post(posts_dict)
         self.finish_json(result={
             'posts': posts_dict
             })
 
-    def fill_users(self, posts):
-        user_ids = []
-        for post in posts:
-            if post['author_id'] not in user_ids:
-                user_ids.append(post['author_id'])
-            if post['target_id'] not in user_ids:
-                user_ids.append(post['target_id'])
-            for comment in post.get('comments', []):
-                if comment['author_id'] not in user_ids:
-                    user_ids.append(comment['author_id'])
 
-        users_db = User.select().where(User.id << user_ids)
-        users = [user.to_dict() for user in users_db]
-        for post in posts:
-            post['target'] = self.get_user_by_id(users, post['target_id'])
-            post['author'] = self.get_user_by_id(users, post['author_id'])
-            for comment in post.get('comments', []):
-                comment['author'] = self.get_user_by_id(users, comment['author_id'])
-
-
-    def get_user_by_id(self, users, id):
-        try:
-            return  next(user for user in users if user['id'] == id)
-        except:
-            pass
-
-
-    def fill_comments(self, posts):
-        post_ids = [post['id'] for post in posts]
-        comments = Comment.select().where(Comment.post_id << post_ids)
-        for post in posts:
-            post['comments'] = [comment.to_dict() for comment in comments if comment.post_id == post['id']]

@@ -10,7 +10,7 @@ handlers = [
     (r"/api/user/(?P<id>\d+)/?", UserHandler),
     (r"/api/user/?", UserHandler),
     (r"/api/users/?", UsersHandler),
-    (r"/api/user/(?P<id>\d+)/info/?", UserInfoHandler),
+    (r"/api/user/(?P<username>\S+)/info/?", UserInfoHandler),
     (r"/api/store/upload_token/?", UploadHandler),
     (r"/api/post/?", PostHandler),
     (r"/api/register/?", RegisterHandler),
