@@ -10,3 +10,4 @@ class Comment(BaseModel):
     post_id = IntegerField()
     content = CharField()
     created_at = DateTimeField()
+    deleted = IntegerField()

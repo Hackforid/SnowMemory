@@ -26,3 +26,14 @@ class CommentHandler(BaseHandler):
             })
 
 
+    @auth_login
+    def delete(self, id):
+        comment = Comment.single(Comment.id == id)
+        if comment is None:
+            raise JsonException(errcode=1001, errmsg="comment not exist")
+        if comment.author_id != self.current_user.id:
+            raise JsonException(errcode=1002, errmsg="permission not allow")
+        comment.deleted = 1
+        comment.save()
+        self.finish_json()
+
