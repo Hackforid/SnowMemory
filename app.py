@@ -19,6 +19,7 @@ from router import handlers
 
 define("port", default=9501, help="run on the given port", type=int)
 
+
 class Application(tornado.web.Application):
 
     def __init__(self):
@@ -28,18 +29,18 @@ class Application(tornado.web.Application):
             autoreload=True,
             gzip=True,
             debug=True,
-            #login_url='/login/',
+            # login_url='/login/',
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )
 
-        tornado.web.Application.__init__(self, handlers, **setting)
+        tornado.web.Application.__init__(self, handlers, ** setting)
 
 
 def main():
     tornado.options.parse_command_line()
     # http_server = tornado.httpserver.HTTPServer(Application())
     # http_server.listen(options.port, address="127.0.0.1")
-    #tornado.ioloop.IOLoop.instance().start()
+    # tornado.ioloop.IOLoop.instance().start()
     AsyncIOMainLoop().install()
     loop = asyncio.get_event_loop()
     app = Application()
@@ -49,4 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

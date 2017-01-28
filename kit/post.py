@@ -31,7 +31,7 @@ def get_user_by_id(users, id):
 
 def fill_comments(posts):
     post_ids = [post['id'] for post in posts]
-    comments = Comment.select().where(Comment.post_id << post_ids)
+    comments = Comment.get_by_post_ids(post_ids)
     for post in posts:
         post['comments'] = [comment.to_dict() for comment in comments if comment.post_id == post['id']]
 

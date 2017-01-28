@@ -16,4 +16,5 @@ handlers = [
     (r"/api/register/?", RegisterHandler),
     (r"/api/auth/?", AuthHandler),
     (r"/api/post/(?P<post_id>\d+)/comment/?", CommentHandler),
+    (r"/api/post/(?P<post_id>\d+)/comment/(?P<comment_id>\d+)/?", CommentHandler),
 ]
