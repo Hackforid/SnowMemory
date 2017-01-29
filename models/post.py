@@ -22,3 +22,12 @@ class Post(BaseModel):
     content = CharField()
     photos = CharArrayField()
     created_at = DateTimeField()
+    deleted = IntegerField()
+
+    @staticmethod
+    def get_more(start_id=-1, limit=20):
+        if start_id != -1:
+            posts = Post.select().where(Post.id < start_id, Post.deleted != 1).order_by(-Post.created_at).limit(limit)
+        else:
+            posts = Post.select().where(Post.deleted != 1).order_by(-Post.created_at).limit(limit)
+        return posts

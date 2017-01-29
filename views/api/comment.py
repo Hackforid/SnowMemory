@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import time
 from views import BaseHandler
 from models.user import User
 from models.post import Post

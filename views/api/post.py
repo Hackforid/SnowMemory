@@ -38,14 +38,23 @@ class PostHandler(BaseHandler):
     def get(self):
         start_id = int(self.get_argument('start_id', -1))
         limit = int(self.get_argument('limit', 20))
-        if start_id != -1:
-            posts = Post.select().where(Post.id < start_id).order_by(-Post.created_at).limit(limit)
-        else:
-            posts = Post.select().order_by(-Post.created_at).limit(limit)
+        posts = Post.get_more(start_id, limit)
         posts_dict = [post.to_dict() for post in posts]
         fill_user_and_comment_to_post(posts_dict)
         self.finish_json(result={
             'posts': posts_dict
             })
 
+class PostDetailHandler(BaseHandler):
+
+    @auth_login
+    def delete(self, post_id):
+        post = Post.single(Post.id == post_id)
+        if post is None:
+            raise JsonException(errcode="1001", errmsg="Post not exist")
+        if post.author_id != self.current_user.id:
+            raise JsonException(errcode="1002", errmsg="Permission not allowed")
+        post.deleted = 1
+        post.save()
+        self.finish_json()
 
