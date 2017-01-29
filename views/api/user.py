@@ -5,7 +5,7 @@ from models.user import User
 from models.post import Post
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
-from kit.auth import auth_login
+from kit.auth import auth_login, password_hash
 from kit.post import fill_user_and_comment_to_post
 from utils.json import json_encode
 
@@ -69,3 +69,36 @@ class UserInfoHandler(BaseHandler):
             "user": user.to_dict(),
             "posts": posts_dict
             })
+
+class ChangeUsernameHandler(BaseHandler):
+
+    @auth_login
+    def put(self):
+        username = self.get_json_argument('username')
+        username = username.strip()
+        if self.current_user.username != username:
+            self.current_user.username = username
+            self.current_user.save()
+        self.finish_json(result={
+            user: self.current_user.to_dict()
+            })
+
+class ChangePasswordHandler(BaseHandler):
+
+    @auth_login
+    def put(self):
+        old_password = self.get_json_argument('old_password')
+        new_password = self.get_json_argument('new_password')
+
+        saved_old_pwd = password_hash(old_password)
+        if self.current_user.password != saved_old_pwd:
+            raise JsonException(errcode="1001", errmsg="wrong pwd")
+
+        self.current_user.password = password_hash(new_password)
+        self.current_user.save()
+        self.finish_json(result={
+            user: self.current_user.to_dict()
+            })
+
+
+
