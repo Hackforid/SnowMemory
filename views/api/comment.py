@@ -22,6 +22,7 @@ class CommentHandler(BaseHandler):
         comment.save()
         comment_dict = comment.to_dict()
         comment_dict['author'] = self.current_user.to_dict()
+        time.sleep(1)
         self.finish_json(result={
             "comment": comment_dict
             })

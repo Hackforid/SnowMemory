@@ -58,3 +58,14 @@ class PostDetailHandler(BaseHandler):
         post.save()
         self.finish_json()
 
+    @auth_login
+    def get(self, post_id):
+        post = Post.single(Post.id == post_id)
+        if post is None:
+            raise JsonException(errcode="1001", errmsg="Post not exist")
+        post_dict = post.to_dict()
+        fill_user_and_comment_to_post([post_dict])
+
+        self.finish_json(result={
+            'post': post_dict
+            })
