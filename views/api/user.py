@@ -3,11 +3,13 @@
 from views import BaseHandler
 from models.user import User
 from models.post import Post
+from models.auth import Auth
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
-from kit.auth import auth_login, password_hash
+from kit.auth import auth_login, password_hash, gen_access_token
 from kit.post import fill_user_and_comment_to_post
 from utils.json import json_encode
+from models import db
 
 class UserHandler(BaseHandler):
 
@@ -70,25 +72,47 @@ class UserInfoHandler(BaseHandler):
             "posts": posts_dict
             })
 
+
 class ChangeUsernameHandler(BaseHandler):
 
     @auth_login
     def put(self):
         username = self.get_json_argument('username')
         username = username.strip()
-        if self.current_user.username != username:
-            self.current_user.username = username
-            self.current_user.save()
+        if self.current_user.username == username:
+            raise JsonException(errcode=1003, errmsg="username not changed")
+
+        _user = User.single(User.username == username)
+        if _user is not None:
+            raise JsonException(errcode=1001, errmsg="username exist")
+
+        db.begin()
+        # change username
+        self.current_user.username = username
+        self.current_user.save()
+
+        # change auth
+        access_token = gen_access_token()
+        auth = Auth.single(Auth.source_id==0, Auth.user_id==self.current_user.id)
+        if auth is not None:
+            auth.access_token = access_token
+        else:
+            auth = Auth(source_id=0, user_id=self.current_user.id, access_token=access_token)
+        auth.save()
+
+        db.commit()
+
         self.finish_json(result={
-            user: self.current_user.to_dict()
+            "user": self.current_user.to_dict(),
+            "access_token": access_token
             })
 
 class ChangePasswordHandler(BaseHandler):
 
     @auth_login
     def put(self):
-        old_password = self.get_json_argument('old_password')
-        new_password = self.get_json_argument('new_password')
+        old_password = self.get_json_argument('old_password').strip()
+        new_password = self.get_json_argument('new_password').strip()
 
         saved_old_pwd = password_hash(old_password)
         if self.current_user.password != saved_old_pwd:
@@ -97,7 +121,7 @@ class ChangePasswordHandler(BaseHandler):
         self.current_user.password = password_hash(new_password)
         self.current_user.save()
         self.finish_json(result={
-            user: self.current_user.to_dict()
+            "user": self.current_user.to_dict()
             })
 
 

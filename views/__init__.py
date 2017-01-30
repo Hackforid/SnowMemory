@@ -71,7 +71,6 @@ class BaseHandler(RequestHandler):
 
     def get_current_user(self):
         username = self.request.headers.get('username', None)
-        print(username)
         access_token = self.request.headers.get('access_token', None)
         if username is None or access_token is None:
             return None

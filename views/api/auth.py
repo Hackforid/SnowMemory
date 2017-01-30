@@ -8,7 +8,7 @@ from models.user import User
 from models.auth import Auth
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from exceptions.json import *
-from kit.auth import password_hash
+from kit.auth import password_hash, gen_access_token
 from kit.redis import redis
 from kit.mail import send_register_code
 import utils.strings as strings
@@ -32,7 +32,7 @@ class AuthHandler(BaseHandler):
             user = None
         if user is None or user.password != pwd:
             raise JsonException(1001, 'wrong password')
-        access_token = get_auth()
+        access_token = gen_access_token()
         auth = Auth.single(
             Auth.source_id == source and Auth.user_id == user.id)
         if auth is None:
@@ -70,7 +70,7 @@ class RegisterHandler(BaseHandler):
         hashed_password = password_hash(password)
         user = User(username=username, password=hashed_password, email=email)
         user.save()
-        access_token = get_auth()
+        access_token = gen_access_token()
         auth = Auth(source_id=0, user_id=user.id, access_token=access_token)
         auth.save()
         self.finish_json(result={
@@ -79,7 +79,6 @@ class RegisterHandler(BaseHandler):
         })
 
     async def get(self):
-        print(redis)
         email = self.get_argument('email')
         user = User.single(User.email == email)
         if user is not None:
@@ -94,7 +93,3 @@ class RegisterHandler(BaseHandler):
     def gen_verify_code_key(self, email):
         return 'email_key_' + strings.md5(email)
 
-
-def get_auth():
-    access_token = password_hash(str(datetime.datetime.now()))
-    return access_token
