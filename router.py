@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from views.api.user import UserHandler, UsersHandler, UserInfoHandler, ChangeUsernameHandler, ChangePasswordHandler
+from views.api.user import UserHandler, UsersHandler, UserInfoHandler, ChangeUsernameHandler, ChangePasswordHandler, ChangeAvatarHandler
 from views.api.store import UploadHandler
 from views.api.post import  PostHandler, PostDetailHandler
 from views.api.auth import RegisterHandler, AuthHandler
@@ -20,4 +20,5 @@ handlers = [
     (r"/api/post/(?P<post_id>\d+)/comment/(?P<comment_id>\d+)/?", CommentHandler),
     (r"/api/account/edit/username/?", ChangeUsernameHandler),
     (r"/api/account/edit/password/?", ChangePasswordHandler),
+    (r"/api/account/edit/avatar/?", ChangeAvatarHandler),
 ]

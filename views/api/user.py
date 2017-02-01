@@ -59,18 +59,25 @@ class UserInfoHandler(BaseHandler):
 
     @auth_login
     def get(self, username):
+        with_post = int(self.get_argument('with_post', 0))
         user = User.single(User.username == username)
         if user is None:
             raise JsonException(errcode=1001, errmsg="")
-        posts = Post.select().where(Post.target_id == user.id)
-        posts_dict = [post.to_dict() for post in posts]
-        print(json_encode(posts_dict))
-        fill_user_and_comment_to_post(posts_dict)
+        if with_post == 1:
+            posts = Post.select().where(Post.target_id == user.id)
+            posts_dict = [post.to_dict() for post in posts]
+            print(json_encode(posts_dict))
+            fill_user_and_comment_to_post(posts_dict)
 
-        self.finish_json(result={
-            "user": user.to_dict(),
-            "posts": posts_dict
-            })
+            self.finish_json(result={
+                "user": user.to_dict(),
+                "posts": posts_dict
+                })
+        else:
+            self.finish_json(result={
+                "user": user.to_dict(),
+                })
+
 
 
 class ChangeUsernameHandler(BaseHandler):
@@ -124,5 +131,15 @@ class ChangePasswordHandler(BaseHandler):
             "user": self.current_user.to_dict()
             })
 
+class ChangeAvatarHandler(BaseHandler):
+
+    @auth_login
+    def put(self):
+        avatar = self.get_json_argument('avatar')
+        self.current_user.avatar = avatar
+        self.current_user.save()
+        self.finish_json(result={
+            "user": self.current_user.to_dict()
+            })
 
 
