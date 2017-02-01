@@ -10,3 +10,6 @@ source env/bin/activate
 pip install requirements.txt
 ```
 
+##Config
+Provide a config file`config.yaml`  
+sample as `sample.config.yaml`  

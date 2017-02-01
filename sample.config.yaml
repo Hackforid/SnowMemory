@@ -1,0 +1,9 @@
+# coding=utf-8
+mail:
+    address: admin@gmail.com
+    password: pwd
+    smtp: smtp.gmail.com
+    port: 587
+
+
+
