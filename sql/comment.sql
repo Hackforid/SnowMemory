@@ -11,7 +11,7 @@
  Target Server Version : 100120
  File Encoding         : utf-8
 
- Date: 01/18/2017 21:33:08 PM
+ Date: 02/01/2017 15:14:15 PM
 */
 
 SET NAMES utf8mb4;
@@ -26,10 +26,11 @@ CREATE TABLE `comment` (
   `post_id` int(10) unsigned NOT NULL,
   `author_id` int(10) unsigned NOT NULL,
   `content` varchar(500) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `post_id` (`post_id`),
   KEY `author_id` (`author_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

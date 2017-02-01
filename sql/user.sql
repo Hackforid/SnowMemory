@@ -11,7 +11,7 @@
  Target Server Version : 100120
  File Encoding         : utf-8
 
- Date: 01/18/2017 21:33:16 PM
+ Date: 02/01/2017 15:14:31 PM
 */
 
 SET NAMES utf8mb4;
@@ -26,11 +26,12 @@ CREATE TABLE `user` (
   `username` varchar(64) NOT NULL,
   `password` varchar(64) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 true 0 false',
+  `avatar` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
