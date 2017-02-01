@@ -2,6 +2,7 @@
 
 from peewee import *
 from models import db, BaseModel
+from kit.config import config
 
 class Auth(BaseModel):
 
@@ -10,4 +11,4 @@ class Auth(BaseModel):
     user_id = IntegerField()
     access_token = CharField()
 
-salt = 'test_salt_*(A&J2335HGJ-KHGS0A^HGJHKG)'
+salt = config['user_password_salt']
