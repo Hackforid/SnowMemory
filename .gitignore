@@ -4,3 +4,4 @@ __pycache__/
 *.swp
 config.yaml
 fabfile.py
+exclude.list

@@ -63,7 +63,6 @@ class RegisterHandler(BaseHandler):
         key = self.gen_verify_code_key(email)
         verify_code = await redis.get(key)
         verify_code = str(verify_code, 'utf-8')
-        #print(f"veri={verify_code} input={code}")
         if verify_code != code:
             raise JsonException(10002, 'verify code is incorrect')
 
