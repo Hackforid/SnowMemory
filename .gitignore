@@ -3,3 +3,4 @@ env/
 __pycache__/
 *.swp
 config.yaml
+fabfile.py
