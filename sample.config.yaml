@@ -8,3 +8,11 @@ mail:
 user_password_salt: salt
 
 
+mysql:
+    user: root
+    password: pwd
+    host: localhost
+
+redis:
+    host: localhost
+    port: 6379
