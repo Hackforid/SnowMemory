@@ -10,7 +10,8 @@ import tornado.options
 import tornado.httpserver
 
 from tornado.platform.asyncio import AsyncIOMainLoop
-from kit.coding import config
+from kit.config import config
+
 import asyncio
 
 from tornado.options import define, options
@@ -27,9 +28,9 @@ class Application(tornado.web.Application):
 
         setting = dict(
             cookie_secret="123",
-            autoreload=config.get('debug', true),
+            autoreload=config.get('debug', True),
             gzip=True,
-            debug=config.get('debug', true),
+            debug=config.get('debug', True),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
         )
 
