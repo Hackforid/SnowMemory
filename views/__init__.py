@@ -70,19 +70,15 @@ class BaseHandler(RequestHandler):
         return value
 
     def get_current_user(self):
-        username = self.request.headers.get('username', None)
-        access_token = self.request.headers.get('access_token', None)
-        print(json_encode(self.request.headers))
-        print(f"username={username} at={access_token}")
+        username = self.request.headers.get('username')
+        access_token = self.request.headers.get('Authorization')
         if username is None or access_token is None:
             return None
         user = User.single(User.username == username)
         if user is None:
-            print('no user here')
             return None
         auth = Auth.single(Auth.source_id == 0 and Auth.user_id == user.id)
         if auth.access_token == access_token:
-            print(f'store at is {auth.access_token}')
             return user
         else:
             return None

@@ -27,7 +27,6 @@ class Application(tornado.web.Application):
     def __init__(self):
 
         setting = dict(
-            cookie_secret="123",
             autoreload=config.get('debug', True),
             gzip=True,
             debug=config.get('debug', True),
