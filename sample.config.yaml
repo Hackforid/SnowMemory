@@ -1,4 +1,5 @@
 # coding=utf-8
+debug: true
 mail:
     address: admin@gmail.com
     password: pwd
