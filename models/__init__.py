@@ -25,7 +25,7 @@ class BaseModel(peewee.Model):
         try:
             result = cls.get(*args)
         except Exception as e:
-            print(e)
+            pass
         return result
 
     class Meta:
