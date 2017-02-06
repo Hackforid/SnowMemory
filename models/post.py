@@ -31,3 +31,8 @@ class Post(BaseModel):
         else:
             posts = Post.select().where(Post.deleted != 1).order_by(-Post.created_at).limit(limit)
         return posts
+
+    @staticmethod
+    def get_by_user(user_id):
+        posts = Post.select().where(Post.target_id == user_id, Post.deleted != 1).order_by(-Post.created_at)
+        return posts

@@ -64,7 +64,7 @@ class UserInfoHandler(BaseHandler):
         if user is None:
             raise JsonException(errcode=1001, errmsg="")
         if with_post == 1:
-            posts = Post.select().where(Post.target_id == user.id)
+            posts = Post.get_by_user(user.id)
             posts_dict = [post.to_dict() for post in posts]
             print(json_encode(posts_dict))
             fill_user_and_comment_to_post(posts_dict)
